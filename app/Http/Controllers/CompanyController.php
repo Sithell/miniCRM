@@ -50,6 +50,15 @@ class CompanyController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'name' => 'required|max:255',
+            'email' => 'required|unique:companies',
+            'phone' => 'required|unique:companies',
+            'website' => 'required',
+            'logo' => 'required|file|image|dimensions:width=100,height=100',
+            'owner_id' => 'required'
+        ]);
+
         $fileName = uniqid().'.'.$request->file->extension();
         $request->file->move(storage_path('app/public/companies'), $fileName);
         $id = Company::create([
@@ -109,6 +118,11 @@ class CompanyController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'name' => 'max:255',
+            'logo' => 'file|image|dimensions:width=100,height=100',
+        ]);
+
         if ($request->hasFile('file')) {
             unlink(Company::find($id)->logo);
             $fileName = uniqid().'.'.$request->file('file')->extension();

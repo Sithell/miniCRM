@@ -30,6 +30,15 @@
                 </select>
             </div>
             <input type="submit" class="btn btn-primary" value="Create">
+            @if ($errors->any())
+                <div class="alert alert-danger mt-3 mb-0">
+                    <ul class="mb-0" style="list-style: none">
+                        @foreach ($errors->all() as $error)
+                            <li class="">{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
         </form>
     </div>
 @endsection
