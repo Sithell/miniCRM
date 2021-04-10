@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCompanyRequest;
+use App\Http\Requests\UpdateCompanyRequest;
 use App\Models\Company;
 use App\Models\Employee;
 use App\Models\User;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -30,7 +35,7 @@ class CompanyController extends Controller
     public function showMy()
     {
         return view('company.index', [
-            'companies' => Company::where('owner_id', Auth::id())->get()
+            'companies' => Company::where('owner_id', Auth::id())->paginate()
         ]);
     }
 
@@ -46,18 +51,12 @@ class CompanyController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param StoreCompanyRequest $request
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(StoreCompanyRequest $request)
     {
-        $request->validate([
-            'name' => 'required|max:255',
-            'email' => 'required|unique:companies',
-            'phone' => 'required|unique:companies',
-            'website' => 'required',
-            'logo' => 'required|file|image|dimensions:width=100,height=100',
-            'owner_id' => 'required'
-        ]);
+        $request->validated();
 
         $fileName = uniqid().'.'.$request->file->extension();
         $request->file->move(storage_path('app/public/companies'), $fileName);
@@ -113,15 +112,13 @@ class CompanyController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param UpdateCompanyRequest $request
+     * @param int $id
+     * @return Application|RedirectResponse|Redirector
      */
-    public function update(Request $request, $id)
+    public function update(UpdateCompanyRequest $request, int $id)
     {
-        $request->validate([
-            'name' => 'max:255',
-            'logo' => 'file|image|dimensions:width=100,height=100',
-        ]);
+        $request->validated();
 
         if ($request->hasFile('file')) {
             unlink(Company::find($id)->logo);

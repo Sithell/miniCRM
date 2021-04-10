@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreEmployeeRequest;
+use App\Http\Requests\UpdateEmployeeRequest;
 use App\Models\Company;
 use App\Models\Employee;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
 
 class EmployeeController extends Controller
 {
@@ -33,18 +38,12 @@ class EmployeeController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param StoreEmployeeRequest $request
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(StoreEmployeeRequest $request)
     {
-        $request->validate([
-            'firstName' => 'required|max:255',
-            'lastName' => 'required|max:255',
-            'email' => 'required|unique:employees',
-            'phone' => 'required|unique:employees',
-            'company_id' => 'required'
-        ]);
-
+        $request->validated();
         $id = Employee::create([
             'first_name' => $request->input('firstName'),
             'last_name' => $request->input('lastName'),
@@ -94,15 +93,13 @@ class EmployeeController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param UpdateEmployeeRequest $request
+     * @param int $id
+     * @return Application|RedirectResponse|Redirector
      */
-    public function update(Request $request, $id)
+    public function update(UpdateEmployeeRequest $request, int $id)
     {
-        $request->validate([
-            'firstName' => 'max:255',
-            'lastName' => 'max:255',
-        ]);
+        $request->validated();
 
         Employee::find($id)->update([
             'first_name' => $request->input('firstName'),
