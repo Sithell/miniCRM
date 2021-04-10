@@ -13,4 +13,5 @@ npm-debug.log
 yarn-error.log
 /storage
 /tests
-
+/.idea
+/artisan
