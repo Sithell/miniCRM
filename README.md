@@ -1,11 +1,12 @@
 # Laravel Mini CRM
-Simple CRM system for managing companies and their employees
+Простая CRM система для управления компаниями и их сотрудниками
 
-What this app provides:
-* Email+password authorization
-
-* Basic create/update/read/delete functionality for all entities
-* Load images and store them on the server
-* Access restrictions (e.g. only the owner can edit/delete a company)
-* Pre-generating companies and employees using laravel seeders
-* Input data validation
+Приложение реализует следующий функционал:
+* Авторизация по почте и паролю
+* CRUD (Create, Read, Update, Delete) панели для Компаний и Сотрудников
+* Загрузка изображений на сайт и хранение их на диске
+* Ограничение доступа по привиллегиям (например, только владелец может редактировать / удалять компанию)
+* Применение сидеров (seeds) для создания первого пользователя с данными для входа
+* Использование миграций artisan
+* Пагинация с выводом последних 15 созданных элементов на страницу
+* Валидация запросов с помощью Request классов
